@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'MaterialIcon';
+  src: url('~/assets/fonts/MaterialIcons-Regular.ttf');
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  @apply bg-neutral-50;
+}
+
+button {
+  outline: none;
+}
+
+@keyframes toast {
+  0% {
+    transform: translateX(100%);
+  }
+  25% {
+    transform: translateX(0);
+  }
+  75% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
