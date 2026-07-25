@@ -40,6 +40,14 @@
             <option>Sachet</option>
           </select>
         </div>
+        <div class="inputs">
+          <label for="Code">Entry Date</label>
+          <input type="date" v-model="medicinePayload.entryDate" placeholder="entry date..." required>
+        </div>
+        <div class="inputs">
+          <label for="Code">Expiration Date</label>
+          <input type="date" v-model="medicinePayload.expDate" placeholder="expiration date..." required>
+        </div>
       </div>
       <button type="submit" class="text-white w-full bg-gradient-to-r from-lime-500 to-green-700 py-2 px-8 mt-8 rounded-full hover:enabled:opacity-90 transition-all" :class="state.isLoading && 'animate-pulse'" :disabled="state.isLoading">
         <Icon :icon="state.isLoading ? 'motion_photos_on' : 'check'" :class="state.isLoading && 'animate-spin'" class="inline-block align-top mr-[6px]" />
@@ -89,6 +97,14 @@
             <option>Sachet</option>
           </select>
         </div>
+        <div class="inputs">
+          <label for="Code">Entry Date</label>
+          <input type="date" v-model="medicinePayload.entryDate" placeholder="entry date..." required>
+        </div>
+        <div class="inputs">
+          <label for="Code">Expiration Date</label>
+          <input type="date" v-model="medicinePayload.expDate" placeholder="expiration date..." required>
+        </div>
       </div>
       <button type="submit" class="text-white w-full bg-gradient-to-r from-lime-500 to-green-700 py-2 px-8 mt-8 rounded-full hover:enabled:opacity-90 transition-all" :class="state.isLoading && 'animate-pulse'" :disabled="state.isLoading">
         <Icon :icon="state.isLoading ? 'motion_photos_on' : 'upgrade'" :class="state.isLoading && 'animate-spin'" class="inline-block align-top mr-[6px]" />
@@ -131,6 +147,8 @@
               <th>Original Price</th>
               <th>Selling Price</th>
               <th>Stock</th>
+              <th>Entry Date</th>
+              <th>Expired Date</th>
               <th>Sold</th>
               <th>Action</th>
             </tr>
@@ -144,6 +162,8 @@
               <td>{{ item.original_price }}</td>
               <td>{{ item.selling_price }}</td>
               <td>{{ item.stock }}</td>
+              <td>{{ item.entry_date ? dateFormatter(item.entry_date) : "" }}</td>
+              <td>{{ item.entry_date ? dateFormatter(item.exp_date) : "" }}</td>
               <td>{{ item.sold }}</td>
               <td>
                 <Icon icon="edit" class="rounded-md p-1 mx-1.5 cursor-pointer transition-all" @click="handleUpdateMedicineModal(item)" />
@@ -188,6 +208,8 @@ import type { RealtimeChannel } from '@supabase/supabase-js'
 const supabase = useSupabaseClient()
 let realtimeChannel: RealtimeChannel
 
+const { idrFormatter, dateFormatter } = useUtils()
+
 const medicineForm = {
   code: "",
   name: "",
@@ -195,6 +217,8 @@ const medicineForm = {
   originalPrice: undefined,
   sellingPrice: undefined,
   stock: undefined,
+  entryDate: "",
+  expDate: "",
 }
 const medicinePayload = reactive({ ...medicineForm })
 
@@ -230,6 +254,8 @@ const addNewMedicine = async () => {
       original_price: medicinePayload.originalPrice,
       selling_price: medicinePayload.sellingPrice,
       stock: medicinePayload.stock,
+      entry_date: medicinePayload.entryDate,
+      exp_date: medicinePayload.expDate
     } as any)
     if (error) throw error
     state.isAddMedicine = false
@@ -250,6 +276,8 @@ const handleUpdateMedicineModal = (medicine?: Medicine) => {
       medicinePayload.originalPrice = medicine.original_price
       medicinePayload.sellingPrice = medicine.selling_price
       medicinePayload.stock = medicine.stock
+      medicinePayload.entryDate = medicine.entry_date
+      medicinePayload.expDate = medicine.exp_date
     }
   }
 }
@@ -263,6 +291,8 @@ const updateMedicine = async () => {
       unit: medicinePayload.unit,
       original_price: medicinePayload.originalPrice,
       selling_price: medicinePayload.sellingPrice,
+      entry_date: medicinePayload.entryDate,
+      exp_date: medicinePayload.expDate,
       stock: medicinePayload.stock,
       updated_at: new Date(),
     } as never).eq("code", medicinePayload.code)
